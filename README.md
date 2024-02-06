@@ -6,13 +6,14 @@ Format CommonMark files with `pandoc`!
 
 ## Requirements
 
-Make sure you have the `pandoc` executable available on `PATH`, or specify where it is located using the option `panfmt.pandocExePath`.
+Make sure you have the `pandoc` executable available on `PATH`, or
+specify where it is located using the option `panfmt.pandocExePath`.
 
 ## Extension Settings
 
 This extension contributes the following settings:
 
-```json
+``` json
 "panfmt.enabled": {
     "type": "boolean",
     "default": true,
