@@ -1,0 +1,71 @@
+{
+    "name": "panfmt",
+    "displayName": "panfmt",
+    "repository": {
+        "url": "https://github.com/bzm3r/panfmt"
+    },
+    "description": "Use `pandoc` to format markdown files.",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.86.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onLanguage:markdown"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "configuration": {
+            "type": "object",
+            "title": "Pandoc based Markdown formatter",
+            "properties": {
+                "panfmt.enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable panfmt as a markdown formatter."
+                },
+                "panfmt.pandocExePath": {
+                    "type": "string",
+                    "default": "pandoc",
+                    "description": "Path to pandoc executable to use for formatting operations."
+                },
+                "panfmt.inputFormat": {
+                    "type": "string",
+                    "default": "commonmark",
+                    "description": "Value for --from flag for `pandoc`. See https://pandoc.org/MANUAL.html#general-options"
+                },
+                "panfmt.outputFormat": {
+                    "type": "string",
+                    "default": "commonmark",
+                    "description": "Value for --to option. See https://pandoc.org/MANUAL.html#general-options"
+                },
+                "panfmt.extraArgs": {
+                    "type": "array",
+                    "default": [],
+                    "description": "See https://pandoc.org/MANUAL.html#options"
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile && npm run lint",
+        "lint": "eslint src --ext ts",
+        "test": "vscode-test"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.86.0",
+        "@types/mocha": "^10.0.6",
+        "@types/node": "18.x",
+        "@typescript-eslint/eslint-plugin": "^6.15.0",
+        "@typescript-eslint/parser": "^6.15.0",
+        "eslint": "^8.56.0",
+        "typescript": "^5.3.3",
+        "@vscode/test-cli": "^0.0.4",
+        "@vscode/test-electron": "^2.3.8"
+    }
+}
