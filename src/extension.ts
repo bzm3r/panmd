@@ -5,8 +5,6 @@
 import * as vscode from "vscode";
 import * as childProcess from "child_process";
 
-let disposables: vscode.Disposable[] = [];
-
 class PandocFormatProvider
     implements
     vscode.DocumentFormattingEditProvider,
@@ -20,11 +18,10 @@ class PandocFormatProvider
 
     constructor(context: vscode.ExtensionContext) {
         console.log("creating format provider...");
-        this.configure(context);
+        this.configure(context, true);
     }
 
-    configure(context: vscode.ExtensionContext) {
-        console.log("configuring format provider...");
+    configure(context: vscode.ExtensionContext, register: boolean) {
         const config = vscode.workspace.getConfiguration("panfmt");
 
         this.enabled = config.get("enabled", this.enabled);
@@ -38,16 +35,20 @@ class PandocFormatProvider
         let result = childProcess.spawnSync(this.path, ["--version"], {
             shell: true,
         });
-
         this.available = !(result.error);
-        if (this.available) {
-            console.log(
-                "panfmt: pandoc available!",
-            );
-            this.manageRegistration(context);
+
+        if (register) {
+            if (this.available) {
+                console.log(
+                    "panfmt: pandoc exe found. Registering.",
+                );
+                this.register(context);
+            } else {
+                this.handleError(result, "panfmt: could not find pandoc executable");
+                console.log("panfmt: pandoc unavailable.");
+            }
         } else {
-            this.handleError(result, "Could not find pandoc executable");
-            console.log("panfmt: pandoc unavailable.");
+            console.log("panfmt: No registration requested.")
         }
     }
 
@@ -62,7 +63,7 @@ class PandocFormatProvider
             vscode.window.showErrorMessage(message);
         } else {
             if (result.status) {
-                vscode.window.showWarningMessage("Warnings when formatting string: " + result.stderr.toString());
+                vscode.window.showWarningMessage("panfmt: warnings when formatting string: " + result.stderr.toString());
             }
             return result.stdout.toString();
         }
@@ -81,9 +82,9 @@ class PandocFormatProvider
                     shell: true,
                 },
             );
-            return this.handleError(result, "Could not format document");
+            return this.handleError(result, "panfmt: could not format document");
         } else {
-            vscode.window.showErrorMessage("Could not find pandoc executable");
+            vscode.window.showErrorMessage("panfmt: could not find pandoc executable");
         }
         return "";
     }
@@ -96,20 +97,20 @@ class PandocFormatProvider
         if (text.length > 0) {
             let formatted = this.formatString(text);
             if (formatted && formatted.length > 0) {
-                console.log("Formatted document successfully!");
+                console.log("panfmt: formatted document successfully!");
                 return vscode.TextEdit.replace(range, formatted);
             }
         }
         return undefined;
     }
 
-    manageRegistration(context: vscode.ExtensionContext) {
+    register(context: vscode.ExtensionContext) {
         if (this.enabled) {
             context.subscriptions.push(vscode.languages
                 .registerDocumentFormattingEditProvider(
                     "markdown",
                     this,
-                ));
+                ))
             console.log("panfmt: registered as format provider for 'markdown'");
         }
     }
@@ -161,8 +162,7 @@ class PandocFormatProvider
 export function activate(context: vscode.ExtensionContext) {
     let formatProvider = new PandocFormatProvider(context);
     let configChangeHandler = vscode.workspace.onDidChangeConfiguration((_) => {
-        vscode.window.showInformationMessage("Configuration changed!");
-        formatProvider.configure(context);
+        formatProvider.configure(context, false);
     });
     context.subscriptions.push(configChangeHandler);
 }
