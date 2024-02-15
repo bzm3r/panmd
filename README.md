@@ -1,4 +1,4 @@
-# panfmt
+# panmd
 
 ## Features
 
@@ -7,34 +7,34 @@ Format CommonMark files with `pandoc`!
 ## Requirements
 
 Make sure you have the `pandoc` executable available on `PATH`, or
-specify where it is located using the option `panfmt.pandocExePath`.
+specify where it is located using the option `panmd.pandocExePath`.
 
 ## Extension Settings
 
 This extension contributes the following settings:
 
 ``` json
-"panfmt.enabled": {
+"panmd.enabled": {
     "type": "boolean",
     "default": true,
-    "description": "Enable panfmt as a markdown formatter."
+    "description": "Enable panmd as a markdown formatter."
 },
-"panfmt.pandocExePath": {
+"panmd.pandocExePath": {
     "type": "string",
     "default": "pandoc",
     "description": "Path to pandoc executable to use for formatting operations."
 },
-"panfmt.inputFormat": {
+"panmd.inputFormat": {
     "type": "string",
     "default": "commonmark",
     "description": "Value for --from flag for `pandoc`. See https://pandoc.org/MANUAL.html#general-options"
 },
-"panfmt.outputFormat": {
+"panmd.outputFormat": {
     "type": "string",
     "default": "commonmark",
     "description": "Value for --to option. See https://pandoc.org/MANUAL.html#general-options"
 },
-"panfmt.extraArgs": {
+"panmd.extraArgs": {
     "type": "array",
     "default": [],
     "description": "See https://pandoc.org/MANUAL.html#options"

@@ -1,10 +1,10 @@
 {
-    "name": "panfmt",
-    "displayName": "panfmt",
+    "name": "panmd",
+    "displayName": "panmd",
     "repository": {
-        "url": "https://github.com/bzm3r/panfmt"
+        "url": "https://github.com/bzm3r/panmd"
     },
-    "description": "Use `pandoc` to format markdown files.",
+    "description": "Custom pandoc markdown based authoring engine.",
     "version": "0.0.1",
     "engines": {
         "vscode": "^1.86.0"
@@ -13,35 +13,142 @@
         "Other"
     ],
     "activationEvents": [
-        "onLanguage:markdown"
+        "workspaceContains:{**/*.pmd, **/*.panmd}",
+        "onLanguage:panmd"
     ],
     "main": "./out/extension.js",
     "contributes": {
+        "languages": [
+            {
+                "id": "panmd",
+                "extensions": [
+                    ".pmd",
+                    ".panmd"
+                ],
+                "aliases": [
+                    "pandoc markdown",
+                    "pandoc md",
+                    "panmd",
+                    "Pandoc Markdown"
+                ],
+                "icon": {
+                    "dark": "./icons/pmd.png",
+                    "light": "./icons/pmd.png"
+                }
+            }
+        ],
+        "grammars": [
+            {
+                "language": "panmd",
+                "scopeName": "text.html.markdown.panmd",
+                "path": "./syntaxes/panmd.tmLanguage.json"
+            }
+        ],
+        "commands": [
+            {
+                "command": "panmd.insertSymbolic",
+                "title": "Insert symbolic",
+                "category": "panmd",
+                "icon": {
+                    "dark": "./icons/pmd.png",
+                    "light": "./icons/pmd.png"
+                },
+                "enablement": "editorLangId == 'panmd'",
+                "shortTitle": "Insert symbolic"
+            },
+            {
+                "command": "panmd.toggleSymbolRendering",
+                "title": "Toggle rendering of symbolics in editor",
+                "category": "panmd",
+                "icon": {
+                    "dark": "./icons/pmd.png",
+                    "light": "./icons/pmd.png"
+                },
+                "enablement": "editorLangId == 'panmd'",
+                "shortTitle": "Toggle symbolics rendering"
+            },
+            {
+                "command": "panmd.renameSymbolicTrigger",
+                "title": "Rename symbolic trigger",
+                "category": "panmd",
+                "icon": {
+                    "dark": "./icons/pmd.png",
+                    "light": "./icons/pmd.png"
+                },
+                "enablement": "editorLangId == 'panmd' && panmd.symbolicSelected",
+                "shortTitle": "Rename symbolic trigger"
+            },
+            {
+                "command": "panmd.configureSymbolicTriggerOutput",
+                "title": "Configure output symbol associated with symbolic trigger",
+                "category": "panmd",
+                "icon": {
+                    "dark": "./icons/pmd.png",
+                    "light": "./icons/pmd.png"
+                },
+                "enablement": "editorLangId == 'panmd' && panmd.symbolicSelected",
+                "shortTitle": "Configure symbolic output"
+            },
+            {
+                "command": "panmd.renderHTML",
+                "title": "Render file as HTML (using pandoc)",
+                "category": "panmd",
+                "icon": {
+                    "dark": "./icons/pmd.png",
+                    "light": "./icons/pmd.png"
+                },
+                "enablement": "editorLangId == 'panmd'",
+                "shortTitle": "Render file as HTML"
+            },
+            {
+                "command": "panmd.renderCommonMark",
+                "title": "Render file in CommonMark format  (using pandoc)",
+                "category": "panmd",
+                "icon": {
+                    "dark": "./icons/pmd.png",
+                    "light": "./icons/pmd.png"
+                },
+                "enablement": "editorLangId == 'panmd'",
+                "shortTitle": "Render file as CommonMark"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "panmd.insertSymbolic",
+                "key": "\\",
+                "when": "editorTextFocus && editorLangId == 'panmd' && !editorReadonly"
+            },
+            {
+                "command": "panmd.toggleSymbolRendering",
+                "key": "ctrl + \\",
+                "when": "editorTextFocus && editorLangId == 'panmd' && !editorReadonly"
+            }
+        ],
         "configuration": {
             "type": "object",
             "title": "Pandoc based Markdown formatter",
             "properties": {
-                "panfmt.enabled": {
+                "panmd.enabled": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Enable panfmt as a markdown formatter."
+                    "description": "Enable panmd engine."
                 },
-                "panfmt.pandocExePath": {
+                "panmd.pandocExePath": {
                     "type": "string",
                     "default": "pandoc",
-                    "description": "Path to pandoc executable to use for formatting operations."
+                    "description": "Path to pandoc executable."
                 },
-                "panfmt.inputFormat": {
+                "panmd.inputFormat": {
                     "type": "string",
-                    "default": "commonmark",
+                    "default": "markdown",
                     "description": "Value for --from flag for `pandoc`. See https://pandoc.org/MANUAL.html#general-options"
                 },
-                "panfmt.outputFormat": {
+                "panmd.outputFormat": {
                     "type": "string",
-                    "default": "commonmark",
+                    "default": "markdown",
                     "description": "Value for --to option. See https://pandoc.org/MANUAL.html#general-options"
                 },
-                "panfmt.extraArgs": {
+                "panmd.extraArgs": {
                     "type": "array",
                     "default": [],
                     "description": "See https://pandoc.org/MANUAL.html#options"
